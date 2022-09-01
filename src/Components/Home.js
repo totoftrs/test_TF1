@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Carousel from "react-elastic-carousel";
 import Item from "./Item";
@@ -61,8 +62,11 @@ const Container = styled.div`
     background-color: rgba(0, 0, 0, 0.5);
     cursor: pointer;
   }
+  .link{
+    text-decoration: none;
+    color: #fff;
+  }
 `;
-const API_URL = " https://tf1-interview.hasura.app/v1/graphql";
 
 const breakPoints = [
   { width: 1, itemsToShow: 1 },
@@ -73,49 +77,27 @@ const breakPoints = [
   { width: 1600, itemsToShow: 6 },
 ];
 
-function Home() {
-  const [data, setData] = useState([]);
+function Home({data}) {
 
-  // Afficher plus de description au clic sur un élement.
-  const handleClick = (id) => {
-    const texts = document.getElementsByClassName("txt");
-    const currentText = texts[id];
-    console.log(currentText)
-    if(!currentText.classList.contains('txt__more')) {
-      currentText.classList.add("txt__more");
-      currentText.classList.remove("txt");
-    }
-    if(parseInt(currentText.getAttribute('data-id')) === id && currentText.classList.contains('txt__more')) {
-      currentText.classList.remove("txt__more");
-      currentText.classList.add("txt");
-    }
+  // Afficher plus de description au clic sur un élement à revoir.
+  // const handleClick = (id) => {
+  //   const texts = document.getElementsByClassName("txt");
+  //   const currentText = texts[id];
+  //   console.log(currentText);
+  //   if (!currentText.classList.contains("txt__more")) {
+  //     currentText.classList.add("txt__more");
+  //     currentText.classList.remove("txt");
+  //   }
+  //   if (
+  //     parseInt(currentText.getAttribute("data-id")) === id &&
+  //     currentText.classList.contains("txt__more")
+  //   ) {
+  //     currentText.classList.remove("txt__more");
+  //     currentText.classList.add("txt");
+  //   }
+  // };
 
-   
-  };
 
-  useEffect(() => {
-    fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
-            query getData {
-              image(limit: 10) {
-                alt
-                id
-                url
-                programs {
-                    name
-                  }
-              }
-            }`,
-      }),
-    })
-      .then((rawData) => rawData.json())
-      .then((jsonData) => setData(jsonData.data.image));
-  }, []);
 
   return (
     <Container>
@@ -128,19 +110,26 @@ function Home() {
             }
 
             return (
-              <div
-                className="carousel-item"
-                key={item.id}
-                onClick={()=>handleClick(index)}
-              >
-                <Item>
-                  <img src={item.url} alt={item.alt} />
-                  <img src="./Vector.png" alt="more__infos" className="picto" />
-                </Item>
-                <div className="title">
-                  <div className={"txt"} data-id={index}>{item.programs[0].name}</div>
+              <Link to={`/video/${item.id}`}  key={item.id} className="link">
+                <div
+                  className="carousel-item"                 
+                  // onClick={() => handleClick(index)}
+                >
+                  <Item>
+                    <img src={item.url} alt={item.alt} />
+                    <img
+                      src="./Vector.png"
+                      alt="more__infos"
+                      className="picto"
+                    />
+                  </Item>
+                  <div className="title">
+                    <div className={"txt"} data-id={index}>
+                      {item.programs[0].name}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </Carousel>
