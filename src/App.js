@@ -10,7 +10,6 @@ function App() {
        <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home/>} exact />
-            {/* <Route path="video/:id" element={<Details/>} /> */}
           </Routes>
         </BrowserRouter>
     </div>

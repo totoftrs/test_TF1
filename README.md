@@ -1,3 +1,17 @@
+ <!-- Informations supplémentaires  -->
+
+ Choix des technos et libraries utilisées :
+ 
+ - React && Styles-components ( pour sa facilité à la prise en main)
+ - React-elastic-carousel, implémente un carousel responsive.
+ - GraphQL, pour des performances, avoir la possibilité de récupérer uniquement les champs nécessaires.
+
+ Suggestions: 
+
+- L'ajout de champs "categories" et "sous-catégories" pour afficher les vidéos par thèmes.
+_ Une page détail (singlePage) avec l'utilisation de react-router-dom ("Link") et UseParams pour afficher un peu plus d'information sur la video (durée, nombre de saison, thème ...)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

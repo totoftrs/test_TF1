@@ -19,19 +19,20 @@ const Container = styled.div`
     width: 100%;
   }
   .carousel-wrapper {
-    width: 1600px;
+    width: 60%;
   }
-  .carousel-item{
+  .carousel-item {
     display: flex;
     align-items: center;
     flex-direction: column;
     color: #fff;
+    z-index: 99;
   }
-  .title{
+  .title {
     max-width: 200px;
     width: 100%;
   }
-  .txt{
+  .txt {
     text-overflow: ellipsis;
     font-size: 1rem;
     line-height: 50px;
@@ -40,35 +41,58 @@ const Container = styled.div`
     font-family: sans-serif;
     text-align: center;
   }
-  .rec-pagination{
+  .txt__more {
+    font-size: 1rem;
+    font-family: sans-serif;
+    text-align: center;
+  }
+  .rec-pagination {
     display: none !important;
   }
-  .rec-item-wrapper{
-    width: 250px !important;
-  }
-  .picto{
+
+  .picto {
     position: absolute;
     padding: 8px;
     width: 16px;
     height: 16px;
-    border-radius:8px;
+    border-radius: 8px;
     bottom: 5px;
     right: 5px;
-    background-color: rgba(0,0,0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
   }
 `;
 const API_URL = " https://tf1-interview.hasura.app/v1/graphql";
 
 const breakPoints = [
   { width: 1, itemsToShow: 1 },
-  { width: 550, itemsToShow: 2, itemsToScroll: 2 },
+  { width: 250, itemsToShow: 2, itemsToScroll: 2 },
   { width: 768, itemsToShow: 3 },
   { width: 1200, itemsToShow: 4 },
-
+  { width: 1400, itemsToShow: 5 },
+  { width: 1600, itemsToShow: 6 },
 ];
 
 function Home() {
   const [data, setData] = useState([]);
+
+  // Afficher plus de description au clic sur un élement.
+  const handleClick = (id) => {
+    const texts = document.getElementsByClassName("txt");
+    const currentText = texts[id];
+    console.log(currentText)
+    if(!currentText.classList.contains('txt__more')) {
+      currentText.classList.add("txt__more");
+      currentText.classList.remove("txt");
+    }
+    if(parseInt(currentText.getAttribute('data-id')) === id && currentText.classList.contains('txt__more')) {
+      currentText.classList.remove("txt__more");
+      currentText.classList.add("txt");
+    }
+
+   
+  };
+
   useEffect(() => {
     fetch(API_URL, {
       method: "POST",
@@ -98,24 +122,27 @@ function Home() {
       <h1>Multimedia</h1>
       <div className="carousel-wrapper">
         <Carousel breakPoints={breakPoints}>
-          {data.map((item) => {
-            if(item.alt !== ' '){
-                return(
-                    <div className="carousel-item" key={item.id}>
-                    <Item >
-                      <img src={item.url} alt={item.alt} />
-                      <img src="./Vector.png" alt="more__infos" className="picto" />
-                    </Item>
-                    <div className="title">
-                      <div className="txt">{item.programs[0].name}</div>
-                    </div>
-                  </div>
-                )
+          {data.map((item, index) => {
+            if (item.alt === " ") {
+              return null;
             }
-          
-          } 
-           
-          )}
+
+            return (
+              <div
+                className="carousel-item"
+                key={item.id}
+                onClick={()=>handleClick(index)}
+              >
+                <Item>
+                  <img src={item.url} alt={item.alt} />
+                  <img src="./Vector.png" alt="more__infos" className="picto" />
+                </Item>
+                <div className="title">
+                  <div className={"txt"} data-id={index}>{item.programs[0].name}</div>
+                </div>
+              </div>
+            );
+          })}
         </Carousel>
       </div>
     </Container>
